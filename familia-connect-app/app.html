@@ -610,7 +610,7 @@
                     <div className="bg-cyan-600 p-6 rounded-[2.5rem] text-white shadow-xl text-center">
                         <h2 className="text-2xl font-black mb-4">Saúde Familiar</h2>
                         <div className="flex justify-center w-full">
-                             <div className="flex gap-1.5 p-1 bg-black/10 rounded-2xl overflow-x-auto scrollbar-hide">
+                             <div className="flex gap-1.5 p-1 bg-black/10 rounded-2xl overflow-x-auto scrollbar-hide max-w-full">
                                 <button onClick={()=>setView('geral')} className={`px-4 py-1 rounded-xl text-[09px] font-black uppercase transition-all whitespace-nowrap ${view==='geral' ? 'bg-white text-cyan-600 shadow-md' : 'text-white/70'}`}>Geral</button>
                                 <button onClick={()=>setView('meds')} className={`px-4 py-1 rounded-xl text-[09px] font-black uppercase transition-all whitespace-nowrap ${view==='meds' ? 'bg-white text-cyan-600 shadow-md' : 'text-white/70'}`}>Remédios</button>
                                 <button onClick={()=>setView('vacs')} className={`px-4 py-1 rounded-xl text-[09px] font-black uppercase transition-all whitespace-nowrap ${view==='vacs' ? 'bg-white text-cyan-600 shadow-md' : 'text-white/70'}`}>Vacinas</button>
