@@ -11,9 +11,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="FamíliaConnect">
     
-    <!-- Manifesto inline para tentar forçar o reconhecimento PWA no Android -->
-    <link rel="manifest" href='data:application/manifest+json,%7B%22name%22%3A%22Fam%C3%ADliaConnect%22%2C%22short_name%22%3A%22Fam%C3%ADliaConnect%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f8fafc%22%2C%22theme_color%22%3A%22%231e3a8a%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fcdn-icons-png.flaticon.com%2F512%2F2554%2F2554978.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D'>
-
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -44,8 +41,10 @@
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased overflow-x-hidden">
     
+    <!-- AQUI É ONDE O REACT VAI RENDERIZAR O SITE -->
     <div id="root"></div>
 
+    <!-- CÓDIGO DA APLICAÇÃO -->
     <script type="text/babel" data-type="module">
         import React, { useState, useEffect } from 'react';
         import { createRoot } from 'react-dom/client';
@@ -56,14 +55,12 @@
         } from 'lucide-react';
 
         function App() {
-          // Estados corrigidos e atualizados
           const [isMenuOpen, setIsMenuOpen] = useState(false);
           const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
           const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
           const [targetPlatform, setTargetPlatform] = useState(null);
-          const [highlightBox, setHighlightBox] = useState(false); // ESTADO ADICIONADO PARA CORRIGIR O ERRO
+          const [highlightBox, setHighlightBox] = useState(false);
 
-          // Função para navegar suavemente entre as secções
           const scrollToSection = (id) => {
             const element = document.getElementById(id);
             if (element) {
@@ -76,8 +73,6 @@
             setTargetPlatform(platform);
             setIsInstallModalOpen(true);
             setHighlightBox(false);
-            
-            // Exemplo: Destacar a caixa após 1 segundo para chamar a atenção
             setTimeout(() => setHighlightBox(true), 1000);
           };
 
@@ -85,11 +80,10 @@
             <div className="min-h-screen bg-slate-50 font-sans text-slate-800 selection:bg-blue-900 selection:text-white overflow-x-hidden">
               
               {/* BARRA DE NAVEGAÇÃO */}
-              <nav className="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 transition-all">
+              <nav className="fixed w-full z-40 bg-white/90 backdrop-blur-md border-b border-slate-100 transition-all">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                   <div className="flex justify-between items-center h-20">
-                    {/* Logo */}
-                    <div className="flex items-center gap-2 cursor-pointer relative z-50" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
+                    <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
                       <div className="w-10 h-10 bg-blue-900 rounded-xl flex items-center justify-center text-white shadow-lg">
                         <Users size={24} />
                       </div>
@@ -98,8 +92,7 @@
                       </span>
                     </div>
 
-                    {/* Menu Desktop */}
-                    <div className="hidden md:flex items-center space-x-8 relative z-50">
+                    <div className="hidden md:flex items-center space-x-8">
                       <button onClick={() => scrollToSection('funcionalidades')} className="text-sm font-bold text-slate-500 hover:text-blue-900 transition-colors cursor-pointer">Funcionalidades</button>
                       <button onClick={() => scrollToSection('beneficios')} className="text-sm font-bold text-slate-500 hover:text-blue-900 transition-colors cursor-pointer">Benefícios</button>
                       <button onClick={() => openInstallModal('any')} className="bg-blue-900 hover:bg-blue-800 text-white px-6 py-2.5 rounded-full text-sm font-black transition-all transform hover:scale-105 shadow-lg shadow-blue-900/30 cursor-pointer">
@@ -107,8 +100,7 @@
                       </button>
                     </div>
 
-                    {/* Menu Mobile Botão */}
-                    <div className="md:hidden flex items-center relative z-50">
+                    <div className="md:hidden flex items-center">
                       <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-slate-500 p-2 cursor-pointer">
                         {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
                       </button>
@@ -116,9 +108,8 @@
                   </div>
                 </div>
 
-                {/* Dropdown Mobile */}
                 {isMenuOpen && (
-                  <div className="md:hidden bg-white border-t border-slate-100 p-6 space-y-4 shadow-xl animate-in slide-in-from-top duration-300 relative z-50">
+                  <div className="md:hidden bg-white border-t border-slate-100 p-6 space-y-4 shadow-xl animate-in slide-in-from-top duration-300">
                     <button onClick={() => scrollToSection('funcionalidades')} className="block w-full text-left text-base font-bold text-slate-600 cursor-pointer">Funcionalidades</button>
                     <button onClick={() => scrollToSection('beneficios')} className="block w-full text-left text-base font-bold text-slate-600 cursor-pointer">Benefícios</button>
                     <button onClick={() => { setIsMenuOpen(false); openInstallModal('any'); }} className="w-full bg-blue-900 text-white px-6 py-4 rounded-xl text-base font-black shadow-lg text-center cursor-pointer">
@@ -128,7 +119,7 @@
                 )}
               </nav>
 
-              {/* HERO SECTION (DESTAQUE INICIAL) */}
+              {/* HERO SECTION */}
               <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-[#1e3a8a]">
                 <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-[800px] h-[800px] bg-blue-800 rounded-full blur-[120px] opacity-50 pointer-events-none"></div>
                 <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/3 w-[600px] h-[600px] bg-cyan-900 rounded-full blur-[100px] opacity-40 pointer-events-none"></div>
@@ -146,29 +137,28 @@
                         Organize tarefas, finanças e a saúde da família num único lugar. Tudo sincronizado em tempo real nos celulares de todos.
                       </p>
                       
-                      <div className="flex flex-col gap-6 pt-4 items-center lg:items-start relative z-50">
-                        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto relative z-50">
-                          {/* Botões das Lojas */}
-                          <a href="/app.html" className="bg-black text-white px-6 py-3 rounded-2xl flex items-center gap-3 hover:scale-105 transition-all border border-white/10 shadow-xl group w-full sm:w-auto min-w-[200px] relative z-50 cursor-pointer" style={{ textDecoration: 'none' }}>
+                      <div className="flex flex-col gap-6 pt-4 items-center lg:items-start relative z-30">
+                        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                          <button onClick={() => openInstallModal('ios')} className="bg-black text-white px-6 py-3 rounded-2xl flex items-center gap-3 hover:scale-105 transition-all border border-white/10 shadow-xl group w-full sm:w-auto min-w-[200px]">
                             <Apple size={28} className="group-hover:text-blue-400" />
                             <div className="text-left leading-none">
                               <p className="text-[10px] uppercase font-bold text-slate-400 mb-1">Acessar Web App</p>
                               <p className="text-lg font-black tracking-tight">Para iPhone</p>
                             </div>
-                          </a>
+                          </button>
 
-                          <a href="/app.html" className="bg-black text-white px-6 py-3 rounded-2xl flex items-center gap-3 hover:scale-105 transition-all border border-white/10 shadow-xl group w-full sm:w-auto min-w-[200px] relative z-50 cursor-pointer" style={{ textDecoration: 'none' }}>
+                          <button onClick={() => openInstallModal('android')} className="bg-black text-white px-6 py-3 rounded-2xl flex items-center gap-3 hover:scale-105 transition-all border border-white/10 shadow-xl group w-full sm:w-auto min-w-[200px]">
                             <Smartphone size={28} className="group-hover:text-blue-400" />
                             <div className="text-left leading-none">
                               <p className="text-[10px] uppercase font-bold text-slate-400 mb-1">Acessar Web App</p>
                               <p className="text-lg font-black tracking-tight">Para Android</p>
                             </div>
-                          </a>
+                          </button>
                         </div>
                         
                         <button 
                           onClick={() => setIsVideoModalOpen(true)}
-                          className="text-white hover:text-cyan-300 font-black text-lg transition-all flex items-center gap-2 group relative z-50 cursor-pointer"
+                          className="text-white hover:text-cyan-300 font-black text-lg transition-all flex items-center gap-2 group cursor-pointer"
                         >
                           <PlayCircle size={24} className="group-hover:scale-110 transition-transform" /> Ver demonstração
                         </button>
@@ -178,16 +168,6 @@
                     <div className="relative mx-auto w-full max-w-lg lg:max-w-none pointer-events-none">
                       <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-white/10 bg-[#f8fafc] aspect-square flex items-center justify-center">
                          <img src="https://images.unsplash.com/photo-1609220136736-443140cffec6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Família conectada" className="absolute inset-0 w-full h-full object-cover opacity-90" />
-                         
-                         <div className="absolute top-6 left-4 sm:left-8 bg-white p-3 sm:p-4 rounded-2xl shadow-xl flex items-center gap-3 animate-bounce" style={{animationDuration: '3s'}}>
-                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center shadow-inner"><CheckCircle2 size={18}/></div>
-                            <div><p className="text-[8px] sm:text-[10px] font-black text-slate-400 uppercase">Concluído</p><p className="text-xs sm:text-sm font-bold text-slate-800">Lixo (Pai)</p></div>
-                         </div>
-
-                         <div className="absolute bottom-8 right-4 sm:right-8 bg-white p-3 sm:p-4 rounded-2xl shadow-xl flex items-center gap-3 animate-bounce" style={{animationDuration: '4s', animationDelay: '1s'}}>
-                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center shadow-inner"><Heart size={18}/></div>
-                            <div><p className="text-[8px] sm:text-[10px] font-black text-slate-400 uppercase">Saúde</p><p className="text-xs sm:text-sm font-bold text-slate-800">Remédio Avó</p></div>
-                         </div>
                       </div>
                     </div>
                   </div>
@@ -203,7 +183,6 @@
                   </div>
 
                   <div className="space-y-32">
-                    {/* Finanças */}
                     <div className="grid lg:grid-cols-2 gap-16 items-center">
                       <div className="space-y-6 order-2 lg:order-1">
                         <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center shadow-inner">
@@ -213,47 +192,32 @@
                         <p className="text-slate-600 text-lg leading-relaxed text-left">
                           Controle as despesas da casa com total transparência. Registre gastos, receba alertas de boletos e saiba exatamente quanto a família pode gastar por mês.
                         </p>
-                        <ul className="space-y-3">
-                          <li className="flex items-center gap-3 font-bold text-slate-700 text-left"><div className="bg-emerald-500 text-white p-1 rounded-full"><Check size={14}/></div> Alertas de vencimento automáticos</li>
-                          <li className="flex items-center gap-3 font-bold text-slate-700 text-left"><div className="bg-emerald-500 text-white p-1 rounded-full"><Check size={14}/></div> Divisão clara de categorias</li>
-                        </ul>
                       </div>
                       <div className="order-1 lg:order-2 bg-slate-100 rounded-[3rem] p-10 shadow-inner">
                         <div className="bg-white rounded-2xl p-6 shadow-xl space-y-4 border border-slate-200">
                           <p className="font-black text-[10px] text-slate-400 uppercase text-left">Saldo Familiar</p>
-                          <div className="flex justify-between items-center"><p className="font-bold text-slate-700">Disponível em Março</p><span className="text-emerald-500 font-black">R$ 5.420,00</span></div>
+                          <div className="flex justify-between items-center"><p className="font-bold text-slate-700">Disponível</p><span className="text-emerald-500 font-black">R$ 5.420,00</span></div>
                           <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden"><div className="bg-emerald-500 w-[70%] h-full"></div></div>
                         </div>
                       </div>
                     </div>
 
-                    {/* Outros Módulos Grid */}
                     <div className="grid md:grid-cols-3 gap-8">
-                      <div className="bg-blue-50 p-8 rounded-[2.5rem] border border-blue-100 space-y-4 hover:shadow-lg transition-all group">
-                        <div className="w-12 h-12 bg-blue-500 text-white rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform"><CheckCircle2 size={24}/></div>
+                      <div className="bg-blue-50 p-8 rounded-[2.5rem] border border-blue-100 space-y-4 hover:shadow-lg transition-all">
+                        <div className="w-12 h-12 bg-blue-500 text-white rounded-xl flex items-center justify-center"><CheckCircle2 size={24}/></div>
                         <h4 className="text-xl font-black text-blue-900">Tarefas & Rotinas</h4>
                         <p className="text-blue-800 text-sm font-medium leading-relaxed">Atribua responsáveis e acabe com as discussões de "quem faz o quê" em casa.</p>
                       </div>
-                      <div className="bg-rose-50 p-8 rounded-[2.5rem] border border-rose-100 space-y-4 hover:shadow-lg transition-all group">
-                        <div className="w-12 h-12 bg-rose-500 text-white rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform"><HeartPulse size={24}/></div>
+                      <div className="bg-rose-50 p-8 rounded-[2.5rem] border border-rose-100 space-y-4 hover:shadow-lg transition-all">
+                        <div className="w-12 h-12 bg-rose-500 text-white rounded-xl flex items-center justify-center"><HeartPulse size={24}/></div>
                         <h4 className="text-xl font-black text-rose-900">Saúde & Vacinas</h4>
                         <p className="text-rose-800 text-sm font-medium leading-relaxed">Controle horários de medicação e o histórico de vacinação de toda a família.</p>
                       </div>
-                      <div className="bg-amber-50 p-8 rounded-[2.5rem] border border-amber-100 space-y-4 hover:shadow-lg transition-all group">
-                        <div className="w-12 h-12 bg-amber-500 text-white rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform"><ShoppingCart size={24}/></div>
+                      <div className="bg-amber-50 p-8 rounded-[2.5rem] border border-amber-100 space-y-4 hover:shadow-lg transition-all">
+                        <div className="w-12 h-12 bg-amber-500 text-white rounded-xl flex items-center justify-center"><ShoppingCart size={24}/></div>
                         <h4 className="text-xl font-black text-amber-900">Lista de Compras</h4>
                         <p className="text-amber-800 text-sm font-medium leading-relaxed">Adicione itens no trabalho e quem estiver no mercado verá a lista na hora.</p>
                       </div>
-                    </div>
-
-                    <div className="bg-indigo-900 rounded-[3rem] p-10 text-white flex flex-col md:flex-row items-center gap-12 shadow-2xl">
-                       <div className="w-24 h-24 bg-white/10 rounded-[2rem] flex items-center justify-center shrink-0">
-                          <Calendar size={48} className="text-indigo-400" />
-                       </div>
-                       <div className="text-center md:text-left space-y-2">
-                          <h4 className="text-3xl font-black">Agenda Familiar Mestre</h4>
-                          <p className="text-indigo-200 text-lg leading-relaxed">Centralize aniversários, reuniões escolares e consultas médicas. Uma agenda que todos podem ver e editar.</p>
-                       </div>
                     </div>
                   </div>
                 </div>
@@ -266,62 +230,15 @@
                   <div className="grid md:grid-cols-3 gap-12">
                     <div className="space-y-4">
                       <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto shadow-sm text-blue-600"><Clock size={32}/></div>
-                      <h5 className="text-xl font-black text-slate-900">Economize 5h semanais</h5>
-                      <p className="text-slate-500 font-medium leading-relaxed">Automatize lembretes e reduza o tempo gasto organizando o dia a dia da sua família.</p>
+                      <h5 className="text-xl font-black text-slate-900">Economize Tempo</h5>
                     </div>
                     <div className="space-y-4">
                       <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto shadow-sm text-emerald-600"><ShieldCheck size={32}/></div>
                       <h5 className="text-xl font-black text-slate-900">Privacidade Total</h5>
-                      <p className="text-slate-500 font-medium leading-relaxed">Os dados da sua casa são sagrados. Encriptação de ponta para garantir segurança absoluta.</p>
                     </div>
                     <div className="space-y-4">
                       <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto shadow-sm text-amber-600"><Star size={32}/></div>
                       <h5 className="text-xl font-black text-slate-900">Simplicidade Extrema</h5>
-                      <p className="text-slate-500 font-medium leading-relaxed">Uma interface intuitiva que até os avós e os filhos conseguem usar sem ajuda.</p>
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              {/* DOWNLOAD SECTION (CENTRO DE VENDAS) */}
-              <section id="download" className="py-24 bg-white px-4">
-                <div className="max-w-4xl mx-auto">
-                  <div className="bg-slate-900 rounded-[4rem] p-10 md:p-20 text-center text-white relative overflow-hidden shadow-2xl">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600 rounded-full blur-[100px] opacity-20 pointer-events-none"></div>
-                    
-                    <div className="relative z-10 space-y-12">
-                      <div className="space-y-6">
-                        <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-tight">Comece a viver em harmonia.</h2>
-                        <p className="text-xl text-slate-400 font-medium max-w-2xl mx-auto">
-                          Instale o aplicativo agora e experimente todas as funcionalidades Pro gratuitamente por 7 dias.
-                        </p>
-                      </div>
-
-                      <div className="flex flex-col md:flex-row gap-6 justify-center items-center relative z-50">
-                        {/* Botão App Store */}
-                        <a href="/app.html" className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white px-8 py-4 rounded-3xl flex items-center gap-4 transition-all border border-white/10 w-full md:w-auto shadow-xl group cursor-pointer" style={{ textDecoration: 'none' }}>
-                          <Apple size={40} className="group-hover:text-blue-400 transition-colors" />
-                          <div className="text-left leading-none">
-                            <p className="text-[10px] uppercase font-bold text-slate-400 mb-1">Acessar Web App</p>
-                            <p className="text-2xl font-black tracking-tight">Para iPhone</p>
-                          </div>
-                        </a>
-                        
-                        {/* Botão Play Store */}
-                        <a href="/app.html" className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white px-8 py-4 rounded-3xl flex items-center gap-4 transition-all border border-white/10 w-full md:w-auto shadow-xl group cursor-pointer" style={{ textDecoration: 'none' }}>
-                          <Smartphone size={40} className="group-hover:text-blue-400 transition-colors" />
-                          <div className="text-left leading-none">
-                            <p className="text-[10px] uppercase font-bold text-slate-400 mb-1">Acessar Web App</p>
-                            <p className="text-2xl font-black tracking-tight">Para Android</p>
-                          </div>
-                        </a>
-                      </div>
-
-                      <div className="pt-6">
-                        <p className="text-slate-500 font-bold text-sm flex items-center justify-center gap-2">
-                           <ShieldCheck size={16} className="text-emerald-500" /> Instalação Direta e Segura
-                        </p>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -338,23 +255,32 @@
                 </div>
               </footer>
 
-              {/* MODAL DO VÍDEO */}
+              {/* ========================================= */}
+              {/* MODAL DO VÍDEO - AQUI ESTÁ A CORREÇÃO!    */}
+              {/* ========================================= */}
               {isVideoModalOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-blue-950/80 backdrop-blur-sm">
-                  <div className="relative w-full max-w-4xl bg-black rounded-3xl overflow-hidden shadow-2xl animate-in zoom-in duration-300">
-                    <button onClick={() => setIsVideoModalOpen(false)} className="absolute top-4 right-4 z-20 bg-black/50 text-white p-2 rounded-full hover:bg-red-500 transition-colors">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-blue-950/90 backdrop-blur-sm">
+                  <div className="relative w-full max-w-4xl bg-black rounded-3xl overflow-hidden shadow-2xl animate-in zoom-in duration-300 border border-white/10">
+                    
+                    {/* Botão de Fechar */}
+                    <button 
+                      onClick={() => setIsVideoModalOpen(false)} 
+                      className="absolute top-4 right-4 z-20 bg-black/60 text-white p-2 rounded-full hover:bg-red-500 transition-colors cursor-pointer"
+                    >
                       <X size={24} />
                     </button>
+                    
+                    {/* O Vídeo */}
                     <div className="aspect-video w-full">
                       <video 
                         className="w-full h-full object-cover" 
                         controls 
                         autoPlay 
-                        muted
                         playsInline
-                        src="videoconnect.mp4" 
+                        src="./video.mp4" 
                       />
                     </div>
+                    
                   </div>
                 </div>
               )}
@@ -363,7 +289,7 @@
               {isInstallModalOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-blue-950/80 backdrop-blur-sm">
                   <div className="relative w-full max-w-md bg-white rounded-[2.5rem] p-8 shadow-2xl animate-in zoom-in duration-300">
-                    <button onClick={() => { setIsInstallModalOpen(false); setHighlightBox(false); }} className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 transition-colors">
+                    <button onClick={() => setIsInstallModalOpen(false)} className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 transition-colors">
                       <X size={24} />
                     </button>
                     
@@ -379,10 +305,7 @@
                         </p>
                       </div>
 
-                      {/* CAIXA DE INSTRUÇÕES COM DESTAQUE DINÂMICO */}
                       <div className={`bg-slate-50 border p-5 rounded-2xl text-left space-y-4 transition-all duration-300 ${highlightBox ? 'highlight-pulse scale-105 border-blue-500 bg-blue-50/50' : 'border-slate-100'}`}>
-                        
-                        {/* Seção iOS (Mostra se for 'any' ou 'ios') */}
                         {(targetPlatform === 'any' || targetPlatform === 'ios') && (
                           <div>
                             <p className="font-bold text-slate-800 text-sm flex items-center gap-2 mb-1">
@@ -394,10 +317,8 @@
                           </div>
                         )}
                         
-                        {/* Linha Divisória só aparece se os dois estiverem ativos */}
                         {targetPlatform === 'any' && <div className="h-px bg-slate-200 w-full"></div>}
                         
-                        {/* Seção Android (Mostra se for 'any' ou 'android') */}
                         {(targetPlatform === 'any' || targetPlatform === 'android') && (
                           <div>
                             <p className="font-bold text-slate-800 text-sm flex items-center gap-2 mb-1">
@@ -411,12 +332,9 @@
                       </div>
 
                       <div className="pt-2">
-                          <a 
-                            href="app.html" 
-                            className="w-full bg-blue-900 text-white font-black py-4 rounded-2xl shadow-lg hover:bg-blue-800 transition-colors flex justify-center items-center gap-2 group text-center"
-                          >
-                            Acessar Aplicativo Agora <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform"/>
-                          </a>
+                          <button onClick={() => setIsInstallModalOpen(false)} className="w-full bg-blue-900 text-white font-black py-4 rounded-2xl shadow-lg hover:bg-blue-800 transition-colors flex justify-center items-center gap-2 group text-center cursor-pointer">
+                            Entendi <Check size={18} className="group-hover:scale-110 transition-transform"/>
+                          </button>
                       </div>
                     </div>
                   </div>
