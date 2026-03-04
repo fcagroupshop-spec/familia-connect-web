@@ -35,13 +35,14 @@
     <script>
         // =================================================================
         // 🔧 CONFIGURAÇÃO DO ÍCONE DO APLICATIVO
-        // Mude o "Ver links" para "Link direto" no ImgBB e cole o link abaixo.
-        // IMPORTANTE: O link TEM de terminar em .jpg ou .png!
+        // No site ImgBB, mude "Ver links" para "Links diretos".
+        // Cole o novo link abaixo (TEM DE TERMINAR EM .JPG ou .PNG!)
+        // Exemplo: "https://i.ibb.co/991VtHBF/Icone-familiaconnect.jpg"
         // =================================================================
-        const CUSTOM_APP_ICON_URL = "https://i.ibb.co/b5F3sTxt/Icone-familiaconnect.png"; 
+        const CUSTOM_APP_ICON_URL = "https://i.ibb.co/9HpJfz5H/Icone-familiaconnect.jpg"; 
         
         document.addEventListener('DOMContentLoaded', () => {
-            const isCustom = CUSTOM_APP_ICON_URL.includes(".jpg") || CUSTOM_APP_ICON_URL.includes(".png");
+                        const isCustom = CUSTOM_APP_ICON_URL.includes(".jpg") || CUSTOM_APP_ICON_URL.includes(".png");
             // O código abaixo usa uma técnica para limpar o cache do ícone nativo
             const finalIconUrl = (isCustom ? CUSTOM_APP_ICON_URL : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png") + "?v=" + new Date().getTime();
             
@@ -107,7 +108,7 @@
         const appId = 'familia-connect-pro';
         
         // --- SISTEMA DE VERSÃO PARA ATUALIZAÇÃO ---
-        const APP_VERSION = "1.1.0"; // Ajuste de Cache de Ícone
+        const APP_VERSION = "1.1.1"; // Ajuste de Cache de Ícone e Layout final
 
         const BRAND_LOGO = window.APP_ICON_URL || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
         
