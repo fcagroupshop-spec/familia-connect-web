@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FamíliaConnect - O Painel da sua Família</title>
+    <title>FamíliaConnect - Painel</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -33,24 +33,19 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <script>
-        // =================================================================
-        // 🔧 CONFIGURAÇÃO DO ÍCONE DO APLICATIVO
-        // No site ImgBB, mude "Ver links" para "Links diretos".
-        // Cole o novo link abaixo (TEM DE TERMINAR EM .JPG ou .PNG!)
-        // Exemplo: "https://i.ibb.co/991VtHBF/Icone-familiaconnect.jpg"
-        // =================================================================
-        const CUSTOM_APP_ICON_URL = "https://i.ibb.co/9HpJfz5H/Icone-familiaconnect.jpg"; 
-        
         document.addEventListener('DOMContentLoaded', () => {
-                        const isCustom = CUSTOM_APP_ICON_URL.includes(".jpg") || CUSTOM_APP_ICON_URL.includes(".png");
-            // O código abaixo usa uma técnica para limpar o cache do ícone nativo
-            const finalIconUrl = (isCustom ? CUSTOM_APP_ICON_URL : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png") + "?v=" + new Date().getTime();
+            // O LINK DO SEU NOVO ÍCONE DA FAMÍLIA COM CORAÇÃO
+            const CUSTOM_APP_ICON_URL = "https://i.ibb.co/fzj8Gr5W/Icone-familiaconnect.png"; 
+            
+            // O código abaixo usa o Date().getTime() para forçar o telemóvel a descarregar o ícone novo ignorando a memória
+            const finalIconUrl = CUSTOM_APP_ICON_URL + "?v=" + new Date().getTime();
             
             document.getElementById('dynamic-apple-icon').href = finalIconUrl;
+            
             const manifest = {
                 "name": "FamíliaConnect",
                 "short_name": "FamíliaConnect",
-                "start_url": "/",
+                "start_url": window.location.pathname + "?v=" + new Date().getTime(), // Força um "novo" aplicativo
                 "display": "standalone",
                 "theme_color": "#1E293B",
                 "background_color": "#0F172A",
@@ -59,7 +54,7 @@
                     { "src": finalIconUrl, "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
                 ]
             };
-            const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/manifest+json'});
+            const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
             document.getElementById('dynamic-manifest').href = URL.createObjectURL(manifestBlob);
             window.APP_ICON_URL = finalIconUrl; // Disponibiliza para o React
         });
@@ -108,9 +103,9 @@
         const appId = 'familia-connect-pro';
         
         // --- SISTEMA DE VERSÃO PARA ATUALIZAÇÃO ---
-        const APP_VERSION = "1.1.1"; // Ajuste de Cache de Ícone e Layout final
+        const APP_VERSION = "1.1.4"; // Correção da posição do coração na logo e margens
 
-        const BRAND_LOGO = window.APP_ICON_URL || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+        const BRAND_LOGO = window.APP_ICON_URL || "https://i.ibb.co/fzj8Gr5W/Icone-familiaconnect.png";
         
         // Fuso horário local corrigido para evitar bugs de viragem de dia
         const getLocalDate = (offsetDays = 0) => {
@@ -273,9 +268,9 @@
             };
 
             return (
-              <div className="space-y-6 pb-24 text-left duration-500 w-full overflow-hidden">
-                <header className="flex justify-between items-center py-4 print:hidden w-full">
-                  <div className="flex items-center gap-3 flex-1 min-w-0 pr-2">
+              <div className="space-y-6 pb-24 text-left duration-500 w-full overflow-hidden px-1">
+                <header className="flex justify-between items-center py-4 print:hidden w-full gap-2">
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
                     <div className="relative shrink-0">
                       <div 
                         onClick={() => logoInputRef.current?.click()}
@@ -294,15 +289,15 @@
                       </button>
                       <input type="file" ref={logoInputRef} className="hidden" accept="image/*" onChange={(e) => { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onloadend = () => updateFamilyLogo(reader.result); reader.readAsDataURL(file); } }} />
                     </div>
-                    <div className="flex flex-col justify-center min-w-0">
+                    <div className="flex flex-col justify-center min-w-0 flex-1">
                       <h1 className="text-xl sm:text-2xl font-black text-slate-800 tracking-tighter leading-tight mb-0.5 truncate">Família {familyName}</h1>
                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none truncate">Painel de controle</p>
                     </div>
                   </div>
-                  <div className="flex gap-1 sm:gap-1.5 shrink-0 pl-1">
-                      <button onClick={forceUpdate} title="Procurar Atualizações" className="p-2 sm:p-3 bg-white rounded-xl shadow-md text-blue-500 hover:text-blue-600 hover:shadow-lg transition-all active:scale-90"><RefreshCw size={18}/></button>
-                      <button onClick={handleShareWhatsApp} title="Convidar via WhatsApp" className="p-2 sm:p-3 bg-white rounded-xl shadow-md text-emerald-500 hover:text-emerald-600 hover:shadow-lg transition-all active:scale-90"><Share2 size={18}/></button>
-                      <button onClick={() => { localStorage.clear(); window.location.reload(); }} title="Sair" className="p-2 sm:p-3 bg-white rounded-xl shadow-md text-slate-400 hover:text-red-500 hover:shadow-lg transition-all active:scale-90"><LogOut size={18}/></button>
+                  <div className="flex gap-1.5 shrink-0 pr-1">
+                      <button onClick={forceUpdate} title="Procurar Atualizações" className="p-2.5 sm:p-3 bg-white rounded-xl shadow-md text-blue-500 hover:text-blue-600 hover:shadow-lg transition-all active:scale-90"><RefreshCw size={18}/></button>
+                      <button onClick={handleShareWhatsApp} title="Convidar via WhatsApp" className="p-2.5 sm:p-3 bg-white rounded-xl shadow-md text-emerald-500 hover:text-emerald-600 hover:shadow-lg transition-all active:scale-90"><Share2 size={18}/></button>
+                      <button onClick={() => { localStorage.clear(); window.location.reload(); }} title="Sair" className="p-2.5 sm:p-3 bg-white rounded-xl shadow-md text-slate-400 hover:text-red-500 hover:shadow-lg transition-all active:scale-90"><LogOut size={18}/></button>
                   </div>
                 </header>
 
@@ -678,13 +673,14 @@
                 <div className="space-y-6 pb-24 text-left text-slate-800 duration-300 w-full overflow-hidden">
                     <div className="bg-cyan-600 p-5 sm:p-6 rounded-[2.5rem] text-white shadow-xl flex flex-col items-center overflow-hidden w-full">
                         <h2 className="text-2xl font-black mb-3 w-full text-center">Saúde Familiar</h2>
-                        <div className="w-full bg-cyan-800/30 rounded-2xl p-1 overflow-x-auto scrollbar-hide">
-                            <div className="flex gap-1 w-max justify-start">
-                                <button onClick={()=>setView('geral')} className={`px-3 py-2 rounded-xl text-[10px] font-black uppercase transition-all shrink-0 ${view==='geral' ? 'bg-white text-cyan-700 shadow-md' : 'text-white/80'}`}>Ver</button>
-                                <button onClick={()=>setView('fichas')} className={`px-3 py-2 rounded-xl text-[10px] font-black uppercase transition-all shrink-0 ${view==='fichas' ? 'bg-white text-cyan-700 shadow-md' : 'text-white/80'}`}>Fichas</button>
-                                <button onClick={()=>setView('meds')} className={`px-3 py-2 rounded-xl text-[10px] font-black uppercase transition-all shrink-0 ${view==='meds' ? 'bg-white text-cyan-700 shadow-md' : 'text-white/80'}`}>Remédios</button>
-                                <button onClick={()=>setView('vacs')} className={`px-3 py-2 rounded-xl text-[10px] font-black uppercase transition-all shrink-0 ${view==='vacs' ? 'bg-white text-cyan-700 shadow-md' : 'text-white/80'}`}>Vacinas</button>
-                                <button onClick={()=>setView('agenda')} className={`px-3 py-2 rounded-xl text-[10px] font-black uppercase transition-all shrink-0 ${view==='agenda' ? 'bg-white text-cyan-700 shadow-md' : 'text-white/80'}`}>Agenda</button>
+                        <div className="w-full bg-cyan-800/30 rounded-2xl p-1 mt-1">
+                            <div className="flex overflow-x-auto scrollbar-hide gap-1 w-full items-center">
+                                <button onClick={()=>setView('geral')} className={`flex-none px-3 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${view==='geral' ? 'bg-white text-cyan-700 shadow-md' : 'text-white/80'}`}>Ver</button>
+                                <button onClick={()=>setView('fichas')} className={`flex-none px-3 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${view==='fichas' ? 'bg-white text-cyan-700 shadow-md' : 'text-white/80'}`}>Fichas</button>
+                                <button onClick={()=>setView('meds')} className={`flex-none px-3 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${view==='meds' ? 'bg-white text-cyan-700 shadow-md' : 'text-white/80'}`}>Remédios</button>
+                                <button onClick={()=>setView('vacs')} className={`flex-none px-3 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${view==='vacs' ? 'bg-white text-cyan-700 shadow-md' : 'text-white/80'}`}>Vacinas</button>
+                                <button onClick={()=>setView('agenda')} className={`flex-none px-3 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${view==='agenda' ? 'bg-white text-cyan-700 shadow-md' : 'text-white/80'}`}>Agenda</button>
+                                <div className="flex-none w-6"></div>
                             </div>
                         </div>
                     </div>
@@ -995,7 +991,7 @@
               <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none"></div>
 
               <div className="w-full max-w-sm relative z-10 space-y-10 animate-in fade-in zoom-in duration-700">
-                <div className="space-y-6 text-center"><div className="flex justify-center"><div className="relative"><div className="w-24 h-24 bg-gradient-to-tr from-indigo-600 to-indigo-400 rounded-[2.8rem] flex items-center justify-center shadow-[0_20px_50px_rgba(79,70,229,0.3)] border border-white/10 relative overflow-hidden"><Users size={44} className="text-white relative z-10" /><div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent"></div></div><div className="absolute -top-1 -right-1"><div className="bg-rose-500 p-2 rounded-full shadow-lg border-2 border-[#0F172A] animate-pulse"><Heart size={14} className="text-white fill-white" /></div></div></div></div>
+                <div className="space-y-6 text-center"><div className="flex justify-center"><div className="relative"><div className="w-24 h-24 bg-gradient-to-tr from-indigo-600 to-indigo-400 rounded-[2.8rem] flex items-center justify-center shadow-[0_20px_50px_rgba(79,70,229,0.3)] border border-white/10 relative overflow-hidden"><img src={window.APP_ICON_URL || "https://i.ibb.co/fzj8Gr5W/Icone-familiaconnect.png"} className="w-full h-full object-cover relative z-10" /><div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent"></div></div><div className="absolute -top-1 -right-1 z-20"><div className="bg-rose-500 p-2 rounded-full shadow-lg border-2 border-[#0F172A] animate-pulse"><Heart size={14} className="text-white fill-white" /></div></div></div></div>
                 <div className="space-y-2"><h1 className="text-4xl font-black tracking-tight leading-none">Família<span className="text-indigo-400 italic">Connect</span><span className="text-indigo-500">.</span></h1><p className="text-slate-400 font-medium text-sm leading-relaxed max-w-[260px] mx-auto">conectando tarefas, finanças e momentos tudo em um único lugar.</p></div></div>
                 
                 <div className="bg-white/[0.03] backdrop-blur-2xl p-8 rounded-[3.5rem] border border-white/10 shadow-2xl relative"><div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
@@ -1164,7 +1160,7 @@
 
           return (
             <div className="min-h-screen bg-slate-50 flex flex-col font-sans overflow-x-hidden print:bg-white">
-              <main className="flex-1 max-w-md mx-auto w-full px-5 pt-4 pb-32 print:p-0 print:max-w-none">
+              <main className="flex-1 max-w-md mx-auto w-full px-3 sm:px-5 pt-4 pb-32 print:p-0 print:max-w-none overflow-x-hidden">
                 {activeTab === 'dashboard' && <Dashboard familyName={familyName} familyLogo={familyLogo} localNote={localNote} setLocalNote={setLocalNote} user={user} familyId={familyId} setActiveTab={setActiveTab} finances={finances} tasks={tasks} medications={medications} groceries={groceries} events={events} vaccines={vaccines} healthRecords={healthRecords} updateFamilyLogo={updateFamilyLogo} />}
                 {activeTab === 'finance' && <FinanceModule finances={finances} recurringFinances={recurringFinances} familyId={familyId} formatDate={formatDate} today={today} appId={appId} showStatus={showStatus} />}
                 {activeTab === 'tasks' && <TaskModule tasks={tasks} recurringTasks={recurringTasks} familyId={familyId} formatDate={formatDate} today={today} appId={appId} showStatus={showStatus} />}
