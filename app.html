@@ -38,7 +38,7 @@
         // Mude o "Ver links" para "Link direto" no ImgBB e cole o link abaixo.
         // IMPORTANTE: O link TEM de terminar em .jpg ou .png!
         // =================================================================
-        const CUSTOM_APP_ICON_URL = "https://i.ibb.co/fzj8Gr5W/Icone-familiaconnect.png"; 
+        const CUSTOM_APP_ICON_URL = "COLE_O_SEU_LINK_DIRETO_AQUI_TERMINADO_EM.JPG"; 
         
         document.addEventListener('DOMContentLoaded', () => {
             const finalIconUrl = CUSTOM_APP_ICON_URL.includes(".jpg") || CUSTOM_APP_ICON_URL.includes(".png") 
@@ -107,7 +107,7 @@
         const appId = 'familia-connect-pro';
         
         // --- SISTEMA DE VERSÃO PARA ATUALIZAÇÃO ---
-        const APP_VERSION = "1.0.8"; // Atualização da estrutura para evitar cortes no telemóvel
+        const APP_VERSION = "1.0.9"; // Ajuste de layout e espaçamentos no telemóvel
 
         const BRAND_LOGO = window.APP_ICON_URL || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
         
@@ -295,15 +295,13 @@
                     </div>
                     <div className="flex flex-col justify-center min-w-0">
                       <h1 className="text-xl sm:text-2xl font-black text-slate-800 tracking-tighter leading-tight mb-0.5 truncate">Família {familyName}</h1>
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-[9px] bg-indigo-50 text-indigo-500 px-2 py-0.5 rounded-md font-black border border-indigo-100 truncate">ID: {familyId}</span>
-                      </div>
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none truncate">Painel de controle</p>
                     </div>
                   </div>
-                  <div className="flex gap-1.5 shrink-0">
-                      <button onClick={forceUpdate} title="Procurar Atualizações" className="p-2.5 sm:p-3 bg-white rounded-xl shadow-md text-blue-500 hover:text-blue-600 hover:shadow-lg transition-all active:scale-90"><RefreshCw size={18}/></button>
-                      <button onClick={handleShareWhatsApp} title="Convidar via WhatsApp" className="p-2.5 sm:p-3 bg-white rounded-xl shadow-md text-emerald-500 hover:text-emerald-600 hover:shadow-lg transition-all active:scale-90"><Share2 size={18}/></button>
-                      <button onClick={() => { localStorage.clear(); window.location.reload(); }} title="Sair" className="p-2.5 sm:p-3 bg-white rounded-xl shadow-md text-slate-400 hover:text-red-500 hover:shadow-lg transition-all active:scale-90"><LogOut size={18}/></button>
+                  <div className="flex gap-1 sm:gap-1.5 shrink-0 pl-1">
+                      <button onClick={forceUpdate} title="Procurar Atualizações" className="p-2 sm:p-3 bg-white rounded-xl shadow-md text-blue-500 hover:text-blue-600 hover:shadow-lg transition-all active:scale-90"><RefreshCw size={18}/></button>
+                      <button onClick={handleShareWhatsApp} title="Convidar via WhatsApp" className="p-2 sm:p-3 bg-white rounded-xl shadow-md text-emerald-500 hover:text-emerald-600 hover:shadow-lg transition-all active:scale-90"><Share2 size={18}/></button>
+                      <button onClick={() => { localStorage.clear(); window.location.reload(); }} title="Sair" className="p-2 sm:p-3 bg-white rounded-xl shadow-md text-slate-400 hover:text-red-500 hover:shadow-lg transition-all active:scale-90"><LogOut size={18}/></button>
                   </div>
                 </header>
 
@@ -680,8 +678,8 @@
                     <div className="bg-cyan-600 p-5 sm:p-6 rounded-[2.5rem] text-white shadow-xl flex flex-col items-center overflow-hidden w-full">
                         <h2 className="text-2xl font-black mb-3 w-full text-center">Saúde Familiar</h2>
                         <div className="w-full bg-cyan-800/30 rounded-2xl p-1 overflow-x-auto scrollbar-hide">
-                            <div className="flex gap-1.5 w-max">
-                                <button onClick={()=>setView('geral')} className={`px-3 py-2 rounded-xl text-[10px] font-black uppercase transition-all shrink-0 ${view==='geral' ? 'bg-white text-cyan-700 shadow-md' : 'text-white/80'}`}>Geral</button>
+                            <div className="flex gap-1 w-max justify-start">
+                                <button onClick={()=>setView('geral')} className={`px-3 py-2 rounded-xl text-[10px] font-black uppercase transition-all shrink-0 ${view==='geral' ? 'bg-white text-cyan-700 shadow-md' : 'text-white/80'}`}>Ver</button>
                                 <button onClick={()=>setView('fichas')} className={`px-3 py-2 rounded-xl text-[10px] font-black uppercase transition-all shrink-0 ${view==='fichas' ? 'bg-white text-cyan-700 shadow-md' : 'text-white/80'}`}>Fichas</button>
                                 <button onClick={()=>setView('meds')} className={`px-3 py-2 rounded-xl text-[10px] font-black uppercase transition-all shrink-0 ${view==='meds' ? 'bg-white text-cyan-700 shadow-md' : 'text-white/80'}`}>Remédios</button>
                                 <button onClick={()=>setView('vacs')} className={`px-3 py-2 rounded-xl text-[10px] font-black uppercase transition-all shrink-0 ${view==='vacs' ? 'bg-white text-cyan-700 shadow-md' : 'text-white/80'}`}>Vacinas</button>
@@ -1165,7 +1163,7 @@
 
           return (
             <div className="min-h-screen bg-slate-50 flex flex-col font-sans overflow-x-hidden print:bg-white">
-              <main className="flex-1 max-w-md mx-auto w-full px-5 pt-4 pb-32 print:p-0 print:max-w-none">
+              <main className="flex-1 max-w-md mx-auto w-full p-6 pb-32 print:p-0 print:max-w-none">
                 {activeTab === 'dashboard' && <Dashboard familyName={familyName} familyLogo={familyLogo} localNote={localNote} setLocalNote={setLocalNote} user={user} familyId={familyId} setActiveTab={setActiveTab} finances={finances} tasks={tasks} medications={medications} groceries={groceries} events={events} vaccines={vaccines} healthRecords={healthRecords} updateFamilyLogo={updateFamilyLogo} />}
                 {activeTab === 'finance' && <FinanceModule finances={finances} recurringFinances={recurringFinances} familyId={familyId} formatDate={formatDate} today={today} appId={appId} showStatus={showStatus} />}
                 {activeTab === 'tasks' && <TaskModule tasks={tasks} recurringTasks={recurringTasks} familyId={familyId} formatDate={formatDate} today={today} appId={appId} showStatus={showStatus} />}
