@@ -38,12 +38,12 @@
         // Mude o "Ver links" para "Link direto" no ImgBB e cole o link abaixo.
         // IMPORTANTE: O link TEM de terminar em .jpg ou .png!
         // =================================================================
-        const CUSTOM_APP_ICON_URL = "COLE_O_SEU_LINK_DIRETO_AQUI_TERMINADO_EM.JPG"; 
+        const CUSTOM_APP_ICON_URL = "https://i.ibb.co/b5F3sTxt/Icone-familiaconnect.png"; 
         
         document.addEventListener('DOMContentLoaded', () => {
-            const finalIconUrl = CUSTOM_APP_ICON_URL.includes(".jpg") || CUSTOM_APP_ICON_URL.includes(".png") 
-                                 ? CUSTOM_APP_ICON_URL 
-                                 : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"; // Ícone de segurança
+            const isCustom = CUSTOM_APP_ICON_URL.includes(".jpg") || CUSTOM_APP_ICON_URL.includes(".png");
+            // O código abaixo usa uma técnica para limpar o cache do ícone nativo
+            const finalIconUrl = (isCustom ? CUSTOM_APP_ICON_URL : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png") + "?v=" + new Date().getTime();
             
             document.getElementById('dynamic-apple-icon').href = finalIconUrl;
             const manifest = {
@@ -54,8 +54,8 @@
                 "theme_color": "#1E293B",
                 "background_color": "#0F172A",
                 "icons": [
-                    { "src": finalIconUrl, "sizes": "192x192", "type": "image/png" },
-                    { "src": finalIconUrl, "sizes": "512x512", "type": "image/png" }
+                    { "src": finalIconUrl, "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+                    { "src": finalIconUrl, "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
                 ]
             };
             const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/manifest+json'});
@@ -107,7 +107,7 @@
         const appId = 'familia-connect-pro';
         
         // --- SISTEMA DE VERSÃO PARA ATUALIZAÇÃO ---
-        const APP_VERSION = "1.0.9"; // Ajuste de layout e espaçamentos no telemóvel
+        const APP_VERSION = "1.1.0"; // Ajuste de Cache de Ícone
 
         const BRAND_LOGO = window.APP_ICON_URL || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
         
@@ -1163,7 +1163,7 @@
 
           return (
             <div className="min-h-screen bg-slate-50 flex flex-col font-sans overflow-x-hidden print:bg-white">
-              <main className="flex-1 max-w-md mx-auto w-full p-6 pb-32 print:p-0 print:max-w-none">
+              <main className="flex-1 max-w-md mx-auto w-full px-5 pt-4 pb-32 print:p-0 print:max-w-none">
                 {activeTab === 'dashboard' && <Dashboard familyName={familyName} familyLogo={familyLogo} localNote={localNote} setLocalNote={setLocalNote} user={user} familyId={familyId} setActiveTab={setActiveTab} finances={finances} tasks={tasks} medications={medications} groceries={groceries} events={events} vaccines={vaccines} healthRecords={healthRecords} updateFamilyLogo={updateFamilyLogo} />}
                 {activeTab === 'finance' && <FinanceModule finances={finances} recurringFinances={recurringFinances} familyId={familyId} formatDate={formatDate} today={today} appId={appId} showStatus={showStatus} />}
                 {activeTab === 'tasks' && <TaskModule tasks={tasks} recurringTasks={recurringTasks} familyId={familyId} formatDate={formatDate} today={today} appId={appId} showStatus={showStatus} />}
