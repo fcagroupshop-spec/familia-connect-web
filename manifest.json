@@ -1,0 +1,16 @@
+{
+  "name": "FamíliaConnect",
+  "short_name": "FamíliaConnect",
+  "start_url": "/app.html",
+  "display": "standalone",
+  "background_color": "#0F172A",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {
+      "src": "https://i.ibb.co/Z1hsB0YY/Icone-familiaconnect.jpg",
+      "sizes": "512x512",
+      "type": "image/jpg",
+      "purpose": "any maskable"
+    }
+  ]
+}
