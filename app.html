@@ -64,10 +64,10 @@
 
         import { initializeApp } from 'firebase/app';
         import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, getDoc, setDoc, query } from 'firebase/firestore';
-        import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from 'firebase/auth';
 
         // --- CONFIGURAÇÃO GLOBAL DO SEU PROJETO ---
-        const firebaseConfig = {
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
           apiKey: "AIzaSyAaO7ku44gWyqwAHUC2lu_Z71MA0b-kegU",
           authDomain: "familiaconnect-452fc.firebaseapp.com",
           projectId: "familiaconnect-452fc",
@@ -80,10 +80,10 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = 'familia-connect-pro';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'familia-connect-pro';
         
         // --- SISTEMA DE VERSÃO PARA ATUALIZAÇÃO ---
-        const APP_VERSION = "1.1.7"; // Força o app a reiniciar com as novas mudanças
+        const APP_VERSION = "1.1.8"; // Força o app a reiniciar com as novas mudanças
 
         const BRAND_LOGO = window.APP_ICON_URL;
         
@@ -630,12 +630,12 @@
             const [nMed, setNMed] = useState({ name: '', patient: '', dosage: '', interval: '8', startDate: today, endDate: '', startTime: '08:00' });
             const [nVac, setNVac] = useState({ name: '', patient: '', date: today, nextDoseDate: '' });
             const [nApp, setNApp] = useState({ title: '', patient: '', date: today, time: '10:00', location: '' });
-            const [nProfile, setNProfile] = useState({ patientName: '', bloodType: '', allergies: '', forbiddenMeds: '', notes: '' });
+            const [nProfile, setNProfile] = useState({ patientName: '', bloodType: '', allergies: '', forbiddenMeds: '', notes: '', weight: '', height: '' });
 
             const saveMed = async () => { if (!nMed.name || !nMed.patient) return; await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'fc_meds'), { ...nMed, familyId, createdAt: Date.now() }); setNMed({ name: '', patient: '', dosage: '', interval: '8', startDate: today, endDate: '', startTime: '08:00' }); showStatus("Salvo!"); };
             const saveVac = async () => { if (!nVac.name || !nVac.patient) return; await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'fc_vaccines'), { ...nVac, familyId, createdAt: Date.now() }); setNVac({ name: '', patient: '', date: today, nextDoseDate: '' }); showStatus("Salvo!"); };
             const saveApp = async () => { if (!nApp.title || !nApp.patient) return; await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'fc_health'), { ...nApp, familyId, createdAt: Date.now() }); setNApp({ title: '', patient: '', date: today, time: '10:00', location: '' }); showStatus("Salvo!"); };
-            const saveProfile = async () => { if (!nProfile.patientName) return; await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'fc_health_profiles'), { ...nProfile, familyId, createdAt: Date.now() }); setNProfile({ patientName: '', bloodType: '', allergies: '', forbiddenMeds: '', notes: '' }); showStatus("Ficha salva!"); };
+            const saveProfile = async () => { if (!nProfile.patientName) return; await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'fc_health_profiles'), { ...nProfile, familyId, createdAt: Date.now() }); setNProfile({ patientName: '', bloodType: '', allergies: '', forbiddenMeds: '', notes: '', weight: '', height: '' }); showStatus("Ficha salva!"); };
 
             const getDoseSchedule = (startTime, interval) => { if (!startTime) return []; const int = parseInt(interval); const [startH, startM] = startTime.split(':').map(Number); const doses = []; for (let i = 0; i < 24; i += int) { const h = (startH + i) % 24; doses.push(`${h.toString().padStart(2, '0')}:${startM.toString().padStart(2, '0')}`); } return doses.sort(); };
 
@@ -699,6 +699,10 @@
                                         <option value="">Tipo Sanguíneo</option><option value="A+">A+</option><option value="A-">A-</option><option value="B+">B+</option><option value="B-">B-</option><option value="AB+">AB+</option><option value="AB-">AB-</option><option value="O+">O+</option><option value="O-">O-</option><option value="Não sabe">Não sabe</option>
                                     </select>
                                 </div>
+                                <div className="grid grid-cols-2 gap-3 mb-3">
+                                    <input placeholder="Peso (ex: 25.5 kg)" className="bg-slate-50 p-4 rounded-2xl w-full border-none font-bold outline-none text-sm placeholder:text-slate-400" value={nProfile.weight} onChange={e=>setNProfile({...nProfile, weight: e.target.value})}/>
+                                    <input placeholder="Altura (ex: 1.20 m)" className="bg-slate-50 p-4 rounded-2xl w-full border-none font-bold outline-none text-sm placeholder:text-slate-400" value={nProfile.height} onChange={e=>setNProfile({...nProfile, height: e.target.value})}/>
+                                </div>
                                 <div className="mb-3">
                                     <input placeholder="Alergias (Ex: Amendoim, Poeira)" className="bg-slate-50 p-4 rounded-2xl w-full border-none font-bold outline-none" value={nProfile.allergies} onChange={e=>setNProfile({...nProfile, allergies: e.target.value})}/>
                                 </div>
@@ -723,8 +727,16 @@
                                         </div>
                                         <button onClick={()=>deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'fc_health_profiles', p.id))} className="text-slate-200 hover:text-red-500 transition-colors shrink-0"><Trash2 size={18}/></button>
                                     </div>
+                                    
+                                    {(p.weight || p.height) && (
+                                        <div className="flex gap-2">
+                                            {p.weight && <span className="bg-cyan-50 text-cyan-700 px-2 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest border border-cyan-100/50">Peso: {p.weight}</span>}
+                                            {p.height && <span className="bg-cyan-50 text-cyan-700 px-2 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest border border-cyan-100/50">Alt: {p.height}</span>}
+                                        </div>
+                                    )}
+
                                     {(p.allergies || p.forbiddenMeds || p.notes) && (
-                                        <div className="bg-slate-50 p-4 rounded-2xl space-y-2 mt-1 border border-slate-100/50">
+                                        <div className="bg-slate-50 p-4 rounded-2xl space-y-2 border border-slate-100/50">
                                             {p.allergies && <p className="text-xs text-slate-600 leading-tight"><strong className="text-cyan-600 uppercase text-[9px] tracking-widest block mb-0.5">Alergias</strong> {p.allergies}</p>}
                                             {p.forbiddenMeds && <p className="text-xs text-slate-600 leading-tight"><strong className="text-red-500 uppercase text-[9px] tracking-widest block mb-0.5">Proibidos</strong> {p.forbiddenMeds}</p>}
                                             {p.notes && <p className="text-xs text-slate-600 leading-tight"><strong className="text-slate-500 uppercase text-[9px] tracking-widest block mb-0.5">Obs</strong> {p.notes}</p>}
@@ -791,6 +803,15 @@
                 }
             };
 
+            const updateItemQuantity = async (g, newQuantity) => {
+                if (!user) return;
+                let qtyNum = parseValor(newQuantity);
+                if (!qtyNum || qtyNum <= 0) qtyNum = 1; // Se apagar o valor, assume 1 por defeito
+                if (qtyNum !== g.quantity) {
+                    await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'fc_groceries', g.id), { quantity: qtyNum });
+                }
+            };
+
             const totalGeral = groceries.reduce((acc, curr) => acc + (parseValor(curr.price) * (parseValor(curr.quantity) || 1)), 0);
 
             // Combina as sugestões de fábrica com as que a família ensinou
@@ -826,7 +847,10 @@
                                                 <div className="min-w-0 pr-2">
                                                     <p className="font-bold text-slate-700 truncate">{g.name}</p>
                                                     <div className="flex gap-2 mt-0.5 items-center flex-wrap">
-                                                        <span className="text-[9px] font-black text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded uppercase shrink-0">{g.quantity || 1} {g.unit || 'un'}</span>
+                                                        <div className="flex items-center bg-amber-50 px-1.5 py-0.5 rounded focus-within:ring-1 focus-within:ring-amber-400 shrink-0" title="Clique para editar a quantidade">
+                                                            <input type="number" step="0.1" min="0.1" defaultValue={g.quantity || 1} onBlur={(e) => updateItemQuantity(g, e.target.value)} onKeyDown={(e) => e.key === 'Enter' && e.target.blur()} className="bg-transparent text-[9px] font-black text-amber-600 w-6 outline-none p-0 m-0 text-center"/>
+                                                            <span className="text-[9px] font-black text-amber-600 uppercase ml-0.5">{g.unit || 'un'}</span>
+                                                        </div>
                                                         <div className="flex items-center bg-emerald-50 px-1.5 py-0.5 rounded focus-within:ring-1 focus-within:ring-emerald-400 shrink-0" title="Clique para editar o preço">
                                                             <span className="text-[9px] font-black text-emerald-600 mr-0.5">R$</span>
                                                             <input type="number" step="0.01" min="0" defaultValue={g.price ? Number(g.price).toFixed(2) : ''} placeholder="0.00" onBlur={(e) => updateItemPrice(g, e.target.value)} onKeyDown={(e) => e.key === 'Enter' && e.target.blur()} className="bg-transparent text-[9px] font-black text-emerald-600 w-12 outline-none p-0 m-0 placeholder:text-emerald-300"/>
@@ -851,7 +875,10 @@
                                             <div className="min-w-0 flex-1">
                                                 <p className="line-through text-slate-500 font-bold truncate">{g.name}</p>
                                                 <div className="flex gap-2 mt-0.5 items-center flex-wrap">
-                                                    <span className="text-[9px] font-black text-slate-400 uppercase shrink-0">{g.quantity || 1} {g.unit || 'un'}</span>
+                                                    <div className="flex items-center bg-slate-200/50 px-1.5 py-0.5 rounded focus-within:ring-1 focus-within:ring-slate-300 shrink-0" title="Clique para editar a quantidade">
+                                                        <input type="number" step="0.1" min="0.1" defaultValue={g.quantity || 1} onBlur={(e) => updateItemQuantity(g, e.target.value)} onKeyDown={(e) => e.key === 'Enter' && e.target.blur()} className="bg-transparent text-[9px] font-black text-slate-500 w-6 outline-none p-0 m-0 text-center"/>
+                                                        <span className="text-[9px] font-black text-slate-500 uppercase ml-0.5">{g.unit || 'un'}</span>
+                                                    </div>
                                                     <div className="flex items-center bg-slate-200/50 px-1.5 py-0.5 rounded focus-within:ring-1 focus-within:ring-slate-300 shrink-0">
                                                         <span className="text-[9px] font-black text-slate-500 mr-0.5">R$</span>
                                                         <input type="number" step="0.01" min="0" defaultValue={g.price ? Number(g.price).toFixed(2) : ''} placeholder="0.00" onBlur={(e) => updateItemPrice(g, e.target.value)} onKeyDown={(e) => e.key === 'Enter' && e.target.blur()} className="bg-transparent text-[9px] font-black text-slate-600 w-12 outline-none p-0 m-0 placeholder:text-slate-400"/>
@@ -1064,7 +1091,11 @@
           useEffect(() => {
             const initAuth = async () => {
               try {
-                await signInAnonymously(auth);
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
               } catch (error) { 
                 console.error("Erro na autenticação:", error); 
                 showStatus("Erro de Auth: " + error.message, "error");
