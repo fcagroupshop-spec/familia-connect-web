@@ -29,7 +29,7 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <!-- Manifesto PWA Fixo (Hardcoded) para garantir a leitura do Novo Ícone e forçar atualização -->
-    <link rel="manifest" href='data:application/manifest+json,%7B%22name%22%3A%22Fam%C3%ADliaConnect%22%2C%22short_name%22%3A%22Fam%C3%ADliaConnect%22%2C%22start_url%22%3A%22%2Fapp.html%3Fv%3D2%22%2C%22display%22%3A%22standalone%22%2C%22theme_color%22%3A%22%231E293B%22%2C%22background_color%22%3A%22%230F172A%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fi.ibb.co%2Ffzj8Gr5W%2FIcone-familiaconnect.jpg%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22https%3A%2F%2Fi.ibb.co%2Ffzj8Gr5W%2FIcone-familiaconnect.jpg%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D'>
+    <link rel="manifest" href='data:application/manifest+json,%7B%22name%22%3A%22Fam%C3%ADliaConnect%22%2C%22short_name%22%3A%22Fam%C3%ADliaConnect%22%2C%22start_url%22%3A%22%2Fapp.html%3Fv%3D2%22%2C%22display%22%3A%22standalone%22%2C%22theme_color%22%3A%22%231E293B%22%2C%22background_color%22%3A%22%230F172A%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fi.ibb.co%2Ffzj8Gr5W%2FIcone-familiaconnect.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22https%3A%2F%2Fi.ibb.co%2Ffzj8Gr5W%2FIcone-familiaconnect.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D'>
     <meta name="theme-color" content="#1E293B">
     <link rel="apple-touch-icon" href="https://i.ibb.co/Z1hsB0YY/Icone-familiaconnect.jpg">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -59,15 +59,15 @@
           Home, DollarSign, CheckSquare, ShoppingCart, Plus, Calendar, RefreshCw, Trash2, Check, 
           MessageSquare, AlertCircle, LogOut, Users, ChevronRight, Activity, Stethoscope, Pill, 
           ArrowRight, Clock, Syringe, Timer, ChevronLeft, Info, History, PartyPopper, Camera, 
-          TrendingUp, TrendingDown, Star, Heart, User, Lock, ShieldCheck, List, Share2, Wallet, Printer, MapPin
+          TrendingUp, TrendingDown, Star, Heart, User, Lock, ShieldCheck, List, Share2, Wallet, Printer, MapPin, Pencil
         } from 'lucide-react';
 
         import { initializeApp } from 'firebase/app';
         import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, getDoc, setDoc, query } from 'firebase/firestore';
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from 'firebase/auth';
+        import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
 
         // --- CONFIGURAÇÃO GLOBAL DO SEU PROJETO ---
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+        const firebaseConfig = {
           apiKey: "AIzaSyAaO7ku44gWyqwAHUC2lu_Z71MA0b-kegU",
           authDomain: "familiaconnect-452fc.firebaseapp.com",
           projectId: "familiaconnect-452fc",
@@ -80,10 +80,10 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'familia-connect-pro';
+        const appId = 'familia-connect-pro';
         
         // --- SISTEMA DE VERSÃO PARA ATUALIZAÇÃO ---
-        const APP_VERSION = "1.1.8"; // Força o app a reiniciar com as novas mudanças
+        const APP_VERSION = "1.1.7"; // Força o app a reiniciar com as novas mudanças
 
         const BRAND_LOGO = window.APP_ICON_URL;
         
@@ -630,12 +630,40 @@
             const [nMed, setNMed] = useState({ name: '', patient: '', dosage: '', interval: '8', startDate: today, endDate: '', startTime: '08:00' });
             const [nVac, setNVac] = useState({ name: '', patient: '', date: today, nextDoseDate: '' });
             const [nApp, setNApp] = useState({ title: '', patient: '', date: today, time: '10:00', location: '' });
-            const [nProfile, setNProfile] = useState({ patientName: '', bloodType: '', allergies: '', forbiddenMeds: '', notes: '', weight: '', height: '' });
+            const [nProfile, setNProfile] = useState({ patientName: '', bloodType: '', weight: '', height: '', allergies: '', forbiddenMeds: '', notes: '', measurementsDate: today });
+            const [editingProfileId, setEditingProfileId] = useState(null);
 
             const saveMed = async () => { if (!nMed.name || !nMed.patient) return; await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'fc_meds'), { ...nMed, familyId, createdAt: Date.now() }); setNMed({ name: '', patient: '', dosage: '', interval: '8', startDate: today, endDate: '', startTime: '08:00' }); showStatus("Salvo!"); };
             const saveVac = async () => { if (!nVac.name || !nVac.patient) return; await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'fc_vaccines'), { ...nVac, familyId, createdAt: Date.now() }); setNVac({ name: '', patient: '', date: today, nextDoseDate: '' }); showStatus("Salvo!"); };
             const saveApp = async () => { if (!nApp.title || !nApp.patient) return; await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'fc_health'), { ...nApp, familyId, createdAt: Date.now() }); setNApp({ title: '', patient: '', date: today, time: '10:00', location: '' }); showStatus("Salvo!"); };
-            const saveProfile = async () => { if (!nProfile.patientName) return; await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'fc_health_profiles'), { ...nProfile, familyId, createdAt: Date.now() }); setNProfile({ patientName: '', bloodType: '', allergies: '', forbiddenMeds: '', notes: '', weight: '', height: '' }); showStatus("Ficha salva!"); };
+            
+            const saveProfile = async () => { 
+                if (!nProfile.patientName) return; 
+                if (editingProfileId) {
+                    await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'fc_health_profiles', editingProfileId), { ...nProfile, updatedAt: Date.now() });
+                    showStatus("Ficha atualizada!");
+                } else {
+                    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'fc_health_profiles'), { ...nProfile, familyId, createdAt: Date.now() }); 
+                    showStatus("Ficha salva!");
+                }
+                setNProfile({ patientName: '', bloodType: '', weight: '', height: '', allergies: '', forbiddenMeds: '', notes: '', measurementsDate: today }); 
+                setEditingProfileId(null);
+            };
+
+            const editProfile = (p) => {
+                setNProfile({
+                    patientName: p.patientName || '',
+                    bloodType: p.bloodType || '',
+                    weight: p.weight || '',
+                    height: p.height || '',
+                    allergies: p.allergies || '',
+                    forbiddenMeds: p.forbiddenMeds || '',
+                    notes: p.notes || '',
+                    measurementsDate: p.measurementsDate || today
+                });
+                setEditingProfileId(p.id);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
 
             const getDoseSchedule = (startTime, interval) => { if (!startTime) return []; const int = parseInt(interval); const [startH, startM] = startTime.split(':').map(Number); const doses = []; for (let i = 0; i < 24; i += int) { const h = (startH + i) % 24; doses.push(`${h.toString().padStart(2, '0')}:${startM.toString().padStart(2, '0')}`); } return doses.sort(); };
 
@@ -692,17 +720,26 @@
                     {view === 'fichas' && (
                         <div className="space-y-6">
                             <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                                <h3 className="text-xs font-black text-slate-400 uppercase mb-4 tracking-widest">Nova Ficha Médica</h3>
+                                <h3 className="text-xs font-black text-slate-400 uppercase mb-4 tracking-widest">{editingProfileId ? 'Editar Ficha Médica' : 'Nova Ficha Médica'}</h3>
                                 <div className="grid grid-cols-2 gap-3 mb-3">
                                     <input placeholder="Nome do Familiar" className="bg-slate-50 p-4 rounded-2xl w-full border-none font-bold outline-none" value={nProfile.patientName} onChange={e=>setNProfile({...nProfile, patientName: e.target.value})}/>
                                     <select className="bg-slate-50 p-4 rounded-2xl w-full border-none font-bold text-slate-600 outline-none" value={nProfile.bloodType} onChange={e=>setNProfile({...nProfile, bloodType: e.target.value})}>
                                         <option value="">Tipo Sanguíneo</option><option value="A+">A+</option><option value="A-">A-</option><option value="B+">B+</option><option value="B-">B-</option><option value="AB+">AB+</option><option value="AB-">AB-</option><option value="O+">O+</option><option value="O-">O-</option><option value="Não sabe">Não sabe</option>
                                     </select>
                                 </div>
-                                <div className="grid grid-cols-2 gap-3 mb-3">
-                                    <input placeholder="Peso (ex: 25.5 kg)" className="bg-slate-50 p-4 rounded-2xl w-full border-none font-bold outline-none text-sm placeholder:text-slate-400" value={nProfile.weight} onChange={e=>setNProfile({...nProfile, weight: e.target.value})}/>
-                                    <input placeholder="Altura (ex: 1.20 m)" className="bg-slate-50 p-4 rounded-2xl w-full border-none font-bold outline-none text-sm placeholder:text-slate-400" value={nProfile.height} onChange={e=>setNProfile({...nProfile, height: e.target.value})}/>
+                                
+                                <div className="bg-slate-50/50 p-3 rounded-2xl mb-3 border border-slate-100">
+                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Medidas Corporais</p>
+                                    <div className="grid grid-cols-2 gap-3 mb-2">
+                                        <input placeholder="Peso (Ex: 26,400)" className="bg-white p-3 rounded-xl w-full border-none font-bold outline-none text-sm shadow-sm" value={nProfile.weight || ''} onChange={e=>setNProfile({...nProfile, weight: e.target.value})}/>
+                                        <input placeholder="Altura (Ex: 1,20)" className="bg-white p-3 rounded-xl w-full border-none font-bold outline-none text-sm shadow-sm" value={nProfile.height || ''} onChange={e=>setNProfile({...nProfile, height: e.target.value})}/>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <label className="text-[10px] font-black text-slate-400 ml-1 whitespace-nowrap">Data da Medição:</label>
+                                        <input type="date" className="bg-white p-2 rounded-xl w-full border-none text-xs text-slate-500 outline-none font-bold shadow-sm" value={nProfile.measurementsDate || today} onChange={e=>setNProfile({...nProfile, measurementsDate: e.target.value})}/>
+                                    </div>
                                 </div>
+
                                 <div className="mb-3">
                                     <input placeholder="Alergias (Ex: Amendoim, Poeira)" className="bg-slate-50 p-4 rounded-2xl w-full border-none font-bold outline-none" value={nProfile.allergies} onChange={e=>setNProfile({...nProfile, allergies: e.target.value})}/>
                                 </div>
@@ -712,7 +749,12 @@
                                 <div className="mb-4">
                                     <textarea placeholder="Condições Crônicas / Observações adicionais" className="bg-slate-50 p-4 rounded-2xl w-full border-none font-bold outline-none resize-none" rows="2" value={nProfile.notes} onChange={e=>setNProfile({...nProfile, notes: e.target.value})}/>
                                 </div>
-                                <button onClick={saveProfile} className="w-full bg-cyan-600 text-white py-4 rounded-2xl font-black shadow-lg active:scale-95 transition-all">Salvar Ficha</button>
+                                <div className="flex gap-2">
+                                    <button onClick={saveProfile} className="flex-1 bg-cyan-600 text-white py-4 rounded-2xl font-black shadow-lg active:scale-95 transition-all">{editingProfileId ? 'Atualizar Ficha' : 'Salvar Ficha'}</button>
+                                    {editingProfileId && (
+                                        <button onClick={() => { setEditingProfileId(null); setNProfile({ patientName: '', bloodType: '', weight: '', height: '', allergies: '', forbiddenMeds: '', notes: '', measurementsDate: today }); }} className="bg-slate-200 text-slate-600 px-6 rounded-2xl font-black shadow-lg active:scale-95 transition-all">Cancelar</button>
+                                    )}
+                                </div>
                             </div>
 
                             {healthProfiles && healthProfiles.map(p => (
@@ -723,20 +765,24 @@
                                             <div className="min-w-0">
                                                 <p className="font-bold text-slate-800 truncate">{p.patientName}</p>
                                                 <p className="text-[10px] font-bold text-slate-400 uppercase truncate">Sangue: {p.bloodType || 'N/A'}</p>
+                                                {(p.weight || p.height) && (
+                                                    <div className="mt-1">
+                                                        <div className="flex gap-2">
+                                                            {p.weight && <span className="bg-cyan-50 text-cyan-700 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest">Peso: {p.weight}</span>}
+                                                            {p.height && <span className="bg-cyan-50 text-cyan-700 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest">Alt: {p.height}</span>}
+                                                        </div>
+                                                        {p.measurementsDate && <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1.5 ml-1">Medido em: {formatDate(p.measurementsDate)}</p>}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
-                                        <button onClick={()=>deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'fc_health_profiles', p.id))} className="text-slate-200 hover:text-red-500 transition-colors shrink-0"><Trash2 size={18}/></button>
-                                    </div>
-                                    
-                                    {(p.weight || p.height) && (
-                                        <div className="flex gap-2">
-                                            {p.weight && <span className="bg-cyan-50 text-cyan-700 px-2 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest border border-cyan-100/50">Peso: {p.weight}</span>}
-                                            {p.height && <span className="bg-cyan-50 text-cyan-700 px-2 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest border border-cyan-100/50">Alt: {p.height}</span>}
+                                        <div className="flex gap-2 shrink-0">
+                                            <button onClick={()=>editProfile(p)} className="text-slate-300 hover:text-cyan-600 transition-colors" title="Editar Ficha"><Pencil size={18}/></button>
+                                            <button onClick={()=>deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'fc_health_profiles', p.id))} className="text-slate-300 hover:text-red-500 transition-colors" title="Excluir Ficha"><Trash2 size={18}/></button>
                                         </div>
-                                    )}
-
+                                    </div>
                                     {(p.allergies || p.forbiddenMeds || p.notes) && (
-                                        <div className="bg-slate-50 p-4 rounded-2xl space-y-2 border border-slate-100/50">
+                                        <div className="bg-slate-50 p-4 rounded-2xl space-y-2 mt-1 border border-slate-100/50">
                                             {p.allergies && <p className="text-xs text-slate-600 leading-tight"><strong className="text-cyan-600 uppercase text-[9px] tracking-widest block mb-0.5">Alergias</strong> {p.allergies}</p>}
                                             {p.forbiddenMeds && <p className="text-xs text-slate-600 leading-tight"><strong className="text-red-500 uppercase text-[9px] tracking-widest block mb-0.5">Proibidos</strong> {p.forbiddenMeds}</p>}
                                             {p.notes && <p className="text-xs text-slate-600 leading-tight"><strong className="text-slate-500 uppercase text-[9px] tracking-widest block mb-0.5">Obs</strong> {p.notes}</p>}
@@ -803,15 +849,6 @@
                 }
             };
 
-            const updateItemQuantity = async (g, newQuantity) => {
-                if (!user) return;
-                let qtyNum = parseValor(newQuantity);
-                if (!qtyNum || qtyNum <= 0) qtyNum = 1; // Se apagar o valor, assume 1 por defeito
-                if (qtyNum !== g.quantity) {
-                    await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'fc_groceries', g.id), { quantity: qtyNum });
-                }
-            };
-
             const totalGeral = groceries.reduce((acc, curr) => acc + (parseValor(curr.price) * (parseValor(curr.quantity) || 1)), 0);
 
             // Combina as sugestões de fábrica com as que a família ensinou
@@ -847,10 +884,7 @@
                                                 <div className="min-w-0 pr-2">
                                                     <p className="font-bold text-slate-700 truncate">{g.name}</p>
                                                     <div className="flex gap-2 mt-0.5 items-center flex-wrap">
-                                                        <div className="flex items-center bg-amber-50 px-1.5 py-0.5 rounded focus-within:ring-1 focus-within:ring-amber-400 shrink-0" title="Clique para editar a quantidade">
-                                                            <input type="number" step="0.1" min="0.1" defaultValue={g.quantity || 1} onBlur={(e) => updateItemQuantity(g, e.target.value)} onKeyDown={(e) => e.key === 'Enter' && e.target.blur()} className="bg-transparent text-[9px] font-black text-amber-600 w-6 outline-none p-0 m-0 text-center"/>
-                                                            <span className="text-[9px] font-black text-amber-600 uppercase ml-0.5">{g.unit || 'un'}</span>
-                                                        </div>
+                                                        <span className="text-[9px] font-black text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded uppercase shrink-0">{g.quantity || 1} {g.unit || 'un'}</span>
                                                         <div className="flex items-center bg-emerald-50 px-1.5 py-0.5 rounded focus-within:ring-1 focus-within:ring-emerald-400 shrink-0" title="Clique para editar o preço">
                                                             <span className="text-[9px] font-black text-emerald-600 mr-0.5">R$</span>
                                                             <input type="number" step="0.01" min="0" defaultValue={g.price ? Number(g.price).toFixed(2) : ''} placeholder="0.00" onBlur={(e) => updateItemPrice(g, e.target.value)} onKeyDown={(e) => e.key === 'Enter' && e.target.blur()} className="bg-transparent text-[9px] font-black text-emerald-600 w-12 outline-none p-0 m-0 placeholder:text-emerald-300"/>
@@ -875,10 +909,7 @@
                                             <div className="min-w-0 flex-1">
                                                 <p className="line-through text-slate-500 font-bold truncate">{g.name}</p>
                                                 <div className="flex gap-2 mt-0.5 items-center flex-wrap">
-                                                    <div className="flex items-center bg-slate-200/50 px-1.5 py-0.5 rounded focus-within:ring-1 focus-within:ring-slate-300 shrink-0" title="Clique para editar a quantidade">
-                                                        <input type="number" step="0.1" min="0.1" defaultValue={g.quantity || 1} onBlur={(e) => updateItemQuantity(g, e.target.value)} onKeyDown={(e) => e.key === 'Enter' && e.target.blur()} className="bg-transparent text-[9px] font-black text-slate-500 w-6 outline-none p-0 m-0 text-center"/>
-                                                        <span className="text-[9px] font-black text-slate-500 uppercase ml-0.5">{g.unit || 'un'}</span>
-                                                    </div>
+                                                    <span className="text-[9px] font-black text-slate-400 uppercase shrink-0">{g.quantity || 1} {g.unit || 'un'}</span>
                                                     <div className="flex items-center bg-slate-200/50 px-1.5 py-0.5 rounded focus-within:ring-1 focus-within:ring-slate-300 shrink-0">
                                                         <span className="text-[9px] font-black text-slate-500 mr-0.5">R$</span>
                                                         <input type="number" step="0.01" min="0" defaultValue={g.price ? Number(g.price).toFixed(2) : ''} placeholder="0.00" onBlur={(e) => updateItemPrice(g, e.target.value)} onKeyDown={(e) => e.key === 'Enter' && e.target.blur()} className="bg-transparent text-[9px] font-black text-slate-600 w-12 outline-none p-0 m-0 placeholder:text-slate-400"/>
@@ -1091,11 +1122,7 @@
           useEffect(() => {
             const initAuth = async () => {
               try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
+                await signInAnonymously(auth);
               } catch (error) { 
                 console.error("Erro na autenticação:", error); 
                 showStatus("Erro de Auth: " + error.message, "error");
